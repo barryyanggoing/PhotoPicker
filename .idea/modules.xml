@@ -2,9 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/PhotoPickerDemo.iml" filepath="$PROJECT_DIR$/PhotoPickerDemo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/PhotoPicker.iml" filepath="$PROJECT_DIR$/.idea/PhotoPicker.iml" />
+      <module fileurl="file://F:\BarryYang\demo\PhotoPicker\PhotoPickerDemo.iml" filepath="F:\BarryYang\demo\PhotoPicker\PhotoPickerDemo.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://F:\BarryYang\demo\PhotoPicker\app\app.iml" filepath="F:\BarryYang\demo\PhotoPicker\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/photopicker/photopicker.iml" filepath="$PROJECT_DIR$/photopicker/photopicker.iml" />
+      <module fileurl="file://F:\BarryYang\demo\PhotoPicker\photopicker\photopicker.iml" filepath="F:\BarryYang\demo\PhotoPicker\photopicker\photopicker.iml" />
     </modules>
   </component>
 </project>

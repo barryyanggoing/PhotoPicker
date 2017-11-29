@@ -75,7 +75,9 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
 
         @Override
         public void onReceive(Context context, Intent intent) {
-
+            if (intent.getAction().equals(ConstantsUtil.REFRESH_PHOTO)){
+                updatePhoto(intent);
+            }
         }
     }
 
@@ -200,17 +202,21 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
         if (requestCode == ConstantsUtil.PREVIEW_PHOTO_REQUEST && resultCode == ConstantsUtil.PREVIEW_PHOTO_RESPONSE) {
             finish();
         } else if (requestCode == ConstantsUtil.PREVIEW_PHOTO_REQUEST && resultCode == ConstantsUtil.PREVIEW_PHOTO_REFRESH) {
-            String photoId = data.getExtras().getString("photoId");
-            Log.d(TAG, "onActivityResult: " + photoId);
-            for (int i = 0; i < imageList.size(); i++) {
-                ImageInfo imageInfo = imageList.get(i);
-                String imageId = imageInfo.getPhotoId();
-                if (photoId.equals(imageId)) {
-                    imageInfo.setSelected(false);
-                }
-            }
-            photoAdapter.notifyDataSetChanged();
+            updatePhoto(data);
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void updatePhoto(Intent data) {
+        String photoId = data.getExtras().getString("photoId");
+        Log.d(TAG, "onActivityResult: " + photoId);
+        for (int i = 0; i < imageList.size(); i++) {
+            ImageInfo imageInfo = imageList.get(i);
+            String imageId = imageInfo.getPhotoId();
+            if (photoId.equals(imageId)) {
+                imageInfo.setSelected(false);
+            }
+        }
+        photoAdapter.notifyDataSetChanged();
     }
 }
