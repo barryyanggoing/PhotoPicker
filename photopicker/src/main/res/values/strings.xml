@@ -3,5 +3,6 @@
     <string name="pp_back">返回</string>
     <string name="pp_preview">预览</string>
     <string name="pp_submit">完成</string>
-    <string name="pp_album_title">相册</string>
+    <string name="pp_photo_title">相册</string>
+    <string name="pp_photo_permission">您没有访问相册的权限，请前往设置找到对应的应用打开权限</string>
 </resources>

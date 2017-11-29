@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.barryyang.photopicker.adapter.PhotoAdapter;
 import com.barryyang.photopicker.bean.ImageInfo;
@@ -77,6 +78,8 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
         if (requestCode == ConstantsUtil.STORAGE_PERMISSION) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 getPhotoList();
+            }else{
+                Toast.makeText(getApplicationContext(),getResources().getString(R.string.pp_photo_permission),Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -105,7 +108,7 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
         mRvList = findViewById(R.id.rv_list);
         mRvList.setLayoutManager(new GridLayoutManager(this,3));
         mTitle = findViewById(R.id.tv_title);
-        mTitle.setText(getResources().getString(R.string.pp_album_title));
+        mTitle.setText(getResources().getString(R.string.pp_photo_title));
         mBack = findViewById(R.id.tv_back);
         mSubmit = findViewById(R.id.tv_submit);
         mPreview = findViewById(R.id.tv_pre);
