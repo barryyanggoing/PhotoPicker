@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="pp_font_size_small">12sp</dimen>
+    <dimen name="pp_font_size_normal">14sp</dimen>
+    <dimen name="pp_font_size_normal_small">15sp</dimen>
+    <dimen name="pp_font_size_normal_high">16sp</dimen>
+    <dimen name="pp_font_size_large">18sp</dimen>
+
+    <dimen name="pp_padding_small6">6dp</dimen>
+    <dimen name="pp_padding_small">12dp</dimen>
+    <dimen name="pp_padding_normal">14dp</dimen>
+    <dimen name="pp_padding_normal_small">15dp</dimen>
+    <dimen name="pp_padding_normal_high">16dp</dimen>
+    <dimen name="pp_padding_large">18dp</dimen>
+</resources>

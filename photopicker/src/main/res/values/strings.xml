@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">PhotoPicker</string>
+    <string name="pp_back">返回</string>
+    <string name="pp_preview">预览</string>
+    <string name="pp_submit">完成</string>
+    <string name="pp_album_title">相册</string>
+</resources>

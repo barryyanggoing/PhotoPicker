@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent80">#80FF4081</color>
+    <color name="pp_colorWhite">#FFFFFF</color>
+    <color name="pp_colorGray3">#333333</color>
+    <color name="pp_colorGray357">#f3f5f7</color>
+</resources>
