@@ -3,13 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.barryyang.photopicker.MainActivity">
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="100dp"
+        android:background="@color/colorAccent"
         android:gravity="center"
         android:onClick="click"
-        android:text="点击进入相册" />
+        android:text="点击进入相册"
+        android:textColor="#ffffff"
+        android:textSize="24sp" />
 
+    <ImageView
+        android:id="@+id/iv_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop" />
 </LinearLayout>

@@ -4,5 +4,9 @@
     <string name="pp_preview">预览</string>
     <string name="pp_submit">完成</string>
     <string name="pp_photo_title">相册</string>
-    <string name="pp_photo_permission">您没有访问相册的权限，请前往设置找到对应的应用打开权限</string>
+    <string name="pp_photo_permission">您没有访问相册的权限，请前往设置找->应用->权限打开</string>
+    <string name="pp_image_selected_max">最多能选9张图片</string>
+    <string name="pp_photo_preview">预览</string>
+    <string name="pp_delete">删除</string>
+    <string name="pp_notice">你还没有选中图片</string>
 </resources>

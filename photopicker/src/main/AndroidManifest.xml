@@ -19,6 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name="com.barryyang.photopicker.PhotoActivity"/>
+        <activity android:name="com.barryyang.photopicker.PreviewActivity"/>
     </application>
 
 </manifest>

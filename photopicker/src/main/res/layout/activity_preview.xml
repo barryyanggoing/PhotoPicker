@@ -8,8 +8,8 @@
         android:id="@+id/rl_top"
         layout="@layout/layout_top" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_list"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/rl_bottom"
@@ -17,6 +17,18 @@
         android:layout_margin="2dp"
         android:background="@color/pp_colorGray357"
         android:scrollbars="none" />
+
+    <TextView
+        android:id="@+id/tv_index"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50dp"
+        android:background="@color/pp_colorBlack20"
+        android:gravity="center"
+        android:padding="10dp"
+        android:textColor="@color/pp_colorWhite"
+        android:textSize="@dimen/pp_font_size_normal_small"/>
 
     <RelativeLayout
         android:id="@+id/rl_bottom"
@@ -26,10 +38,10 @@
         android:background="@color/pp_colorWhite">
 
         <TextView
-            android:id="@+id/tv_pre"
+            android:id="@+id/tv_delete"
             style="@style/PhotoBtnStyle"
             android:layout_alignParentLeft="true"
-            android:text="@string/pp_preview" />
+            android:text="@string/pp_delete" />
 
         <TextView
             android:id="@+id/tv_submit"

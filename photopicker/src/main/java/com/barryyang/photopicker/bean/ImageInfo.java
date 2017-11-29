@@ -8,6 +8,7 @@ package com.barryyang.photopicker.bean;
  */
 public class ImageInfo {
 
+    private String photoId;
     private String photoPath;
     private String photoName;
     private boolean isSelected = false;
@@ -34,5 +35,13 @@ public class ImageInfo {
 
     public void setSelected(boolean selected) {
         isSelected = selected;
+    }
+
+    public String getPhotoId() {
+        return photoId;
+    }
+
+    public void setPhotoId(String photoId) {
+        this.photoId = photoId;
     }
 }

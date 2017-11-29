@@ -17,6 +17,8 @@ public class PhotoUtil {
     private ContentResolver contentResolver;
     private ArrayList<ImageInfo> mImageList = new ArrayList<>();
 
+    public static ArrayList<ImageInfo> imageSelected = new ArrayList<>();
+
     public PhotoUtil(Context context) {
         this.context = context.getApplicationContext();
         this.contentResolver = this.context.getContentResolver();
@@ -32,8 +34,10 @@ public class PhotoUtil {
         if (cur.moveToFirst()) {
             int photoNameIndex = cur.getColumnIndexOrThrow(Media.DISPLAY_NAME);
             int photoPathIndex = cur.getColumnIndexOrThrow(Media.DATA);
+            int photoIDIndex = cur.getColumnIndexOrThrow(Media._ID);
             do {
                 ImageInfo imageInfo = new ImageInfo();
+                imageInfo.setPhotoId(cur.getString(photoIDIndex));
                 imageInfo.setPhotoPath(cur.getString(photoPathIndex));
                 imageInfo.setPhotoName(cur.getString(photoNameIndex));
                 mImageList.add(imageInfo);
