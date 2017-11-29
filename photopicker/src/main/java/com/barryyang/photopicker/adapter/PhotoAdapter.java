@@ -1,93 +1,214 @@
 package com.barryyang.photopicker.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
+import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.barryyang.photopicker.bean.ImageInfo;
+import com.barryyang.photopicker.PhotoPickerActivity;
 import com.barryyang.photopicker.R;
-import com.barryyang.photopicker.listener.CheckBoxClickListener;
-import com.barryyang.photopicker.utils.ConstantsUtil;
-import com.barryyang.photopicker.utils.ImageUtil;
-import com.barryyang.photopicker.utils.PhotoUtil;
-import com.barryyang.photopicker.utils.ScreenUtil;
+import com.barryyang.photopicker.bean.Photo;
+import com.barryyang.photopicker.utils.OtherUtils;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * @author：barryyang on 2017/11/28 16:38
- * @description:
- * @version:
+ * Created by Administrator on 2017/11/29 0029.
  */
-public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> {
 
-    private Context context;
-    private ArrayList<ImageInfo> imageList;
-    private int width;
-    private CheckBoxClickListener mCheckBoxClickListener;
+public class PhotoAdapter extends BaseAdapter {
+    private static final int TYPE_CAMERA = 0;
+    private static final int TYPE_PHOTO = 1;
 
-    public PhotoAdapter(Context context, ArrayList<ImageInfo> imageList) {
-        this.context = context;
-        this.imageList = imageList;
-        this.width = ScreenUtil.getScreenSize(context)[0];
+    private List<Photo> mDatas;
+    //存放已选中的Photo数据
+    private List<String> mSelectedPhotos;
+    private Context mContext;
+    private int mWidth;
+    //是否显示相机，默认不显示
+    private boolean mIsShowCamera = false;
+    //照片选择模式，默认单选
+    private int mSelectMode = PhotoPickerActivity.MODE_SINGLE;
+    //图片选择数量
+    private int mMaxNum = PhotoPickerActivity.DEFAULT_NUM;
+
+    private View.OnClickListener mOnPhotoClick;
+    private PhotoClickCallBack mCallBack;
+
+    public PhotoAdapter(Context context, List<Photo> mDatas) {
+        this.mDatas = mDatas;
+        this.mContext = context;
+        int screenWidth = OtherUtils.getWidthInPx(mContext);
+        mWidth = (screenWidth - OtherUtils.dip2px(mContext, 4)) / 3;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(context).inflate(R.layout.layout_photo_item, parent, false);
-        return new ViewHolder(v);
+    public int getViewTypeCount() {
+        return 2;
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
-        ImageInfo imageInfo = imageList.get(position);
-        ImageUtil.setImageViewWidth(viewHolder.fl_layout, width, 3);
-        Glide.with(context).load(imageInfo.getPhotoPath()).into(viewHolder.iv_image);
-        viewHolder.checkBox.setChecked(imageInfo.isSelected());
-        viewHolder.iv_image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mCheckBoxClickListener != null) {
-                    if (viewHolder.checkBox.isChecked()) {
-                        mCheckBoxClickListener.unSelected(viewHolder, position);
-                    } else {
-                        if (PhotoUtil.imageSelected.size() < ConstantsUtil.IMAGE_SELECTED_MAX) {
-                            mCheckBoxClickListener.selected(viewHolder, position);
-                        }else{
-                            Toast.makeText(context, context.getResources().getString(R.string.pp_image_selected_max), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    @Override
-    public int getItemCount() {
-        return imageList.size();
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        private ImageView iv_image;
-        private CheckBox checkBox;
-        private FrameLayout fl_layout;
-
-        public ViewHolder(View view) {
-            super(view);
-            iv_image = view.findViewById(R.id.iv_image);
-            checkBox = view.findViewById(R.id.checkbox);
-            fl_layout = view.findViewById(R.id.fl_layout);
+    public int getItemViewType(int position) {
+        if (getItem(position) != null && getItem(position).isCamera()) {
+            return TYPE_CAMERA;
+        } else {
+            return TYPE_PHOTO;
         }
     }
 
-    public void setCheckBoxClickListener(CheckBoxClickListener checkBoxClickListener) {
-        this.mCheckBoxClickListener = checkBoxClickListener;
+    @Override
+    public int getCount() {
+        return mDatas.size();
+    }
+
+    @Override
+    public Photo getItem(int position) {
+        if (mDatas == null || mDatas.size() == 0) {
+            return null;
+        }
+        return mDatas.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return mDatas.get(position).getId();
+    }
+
+    public void setDatas(List<Photo> mDatas) {
+        this.mDatas = mDatas;
+    }
+
+    public boolean isShowCamera() {
+        return mIsShowCamera;
+    }
+
+    public void setIsShowCamera(boolean isShowCamera) {
+        this.mIsShowCamera = isShowCamera;
+        if (mIsShowCamera) {
+            Photo camera = new Photo(null);
+            camera.setIsCamera(true);
+            mDatas.add(0, camera);
+        }
+    }
+
+    public void setMaxNum(int maxNum) {
+        this.mMaxNum = maxNum;
+    }
+
+    public void setPhotoClickCallBack(PhotoClickCallBack callback) {
+        mCallBack = callback;
+    }
+
+
+    /**
+     * 获取已选中相片
+     *
+     * @return
+     */
+    public List<String> getmSelectedPhotos() {
+        return mSelectedPhotos;
+    }
+
+    public void setSelectMode(int selectMode) {
+        this.mSelectMode = selectMode;
+        if (mSelectMode == PhotoPickerActivity.MODE_MULTI) {
+            initMultiMode();
+        }
+    }
+
+    /**
+     * 初始化多选模式所需要的参数
+     */
+    private void initMultiMode() {
+        mSelectedPhotos = new ArrayList<>();
+        mOnPhotoClick = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String path = v.findViewById(R.id.imageview_photo).getTag().toString();
+                if (mSelectedPhotos.contains(path)) {
+                    v.findViewById(R.id.mask).setVisibility(View.GONE);
+                    v.findViewById(R.id.checkmark).setSelected(false);
+                    mSelectedPhotos.remove(path);
+                } else {
+                    if (mSelectedPhotos.size() >= mMaxNum) {
+                        Toast.makeText(mContext, R.string.msg_maxi_capacity,
+                                Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    mSelectedPhotos.add(path);
+                    v.findViewById(R.id.mask).setVisibility(View.VISIBLE);
+                    v.findViewById(R.id.checkmark).setSelected(true);
+                }
+                if (mCallBack != null) {
+                    mCallBack.onPhotoClick();
+                }
+            }
+        };
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        if (getItemViewType(position) == TYPE_CAMERA) {
+            convertView = LayoutInflater.from(mContext).inflate(
+                    R.layout.item_camera_layout, null);
+            convertView.setTag(null);
+            //设置高度等于宽度
+            GridView.LayoutParams lp = new GridView.LayoutParams(mWidth, mWidth);
+            convertView.setLayoutParams(lp);
+        } else {
+            ViewHolder holder;
+            if (convertView == null) {
+                holder = new ViewHolder();
+                convertView = LayoutInflater.from(mContext).inflate(
+                        R.layout.item_photo_layout, null);
+                holder.photoImageView = convertView.findViewById(R.id.imageview_photo);
+                holder.selectView = convertView.findViewById(R.id.checkmark);
+                holder.maskView = convertView.findViewById(R.id.mask);
+                holder.wrapLayout = convertView.findViewById(R.id.wrap_layout);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+
+            holder.photoImageView.setImageResource(R.drawable.ic_photo_loading);
+            Photo photo = getItem(position);
+            if (mSelectMode == PhotoPickerActivity.MODE_MULTI) {
+                holder.wrapLayout.setOnClickListener(mOnPhotoClick);
+                holder.photoImageView.setTag(photo.getPath());
+                holder.selectView.setVisibility(View.VISIBLE);
+                if (mSelectedPhotos != null && mSelectedPhotos.contains(photo.getPath())) {
+                    holder.selectView.setSelected(true);
+                    holder.maskView.setVisibility(View.VISIBLE);
+                } else {
+                    holder.selectView.setSelected(false);
+                    holder.maskView.setVisibility(View.GONE);
+                }
+            } else {
+                holder.selectView.setVisibility(View.GONE);
+            }
+            Glide.with(mContext).load(photo.getPath()).into(holder.photoImageView);
+        }
+        return convertView;
+    }
+
+    public class ViewHolder {
+        private ImageView photoImageView;
+        private ImageView selectView;
+        private View maskView;
+        private FrameLayout wrapLayout;
+    }
+
+    /**
+     * 多选时，点击相片的回调接口
+     */
+    public interface PhotoClickCallBack {
+        void onPhotoClick();
     }
 }
