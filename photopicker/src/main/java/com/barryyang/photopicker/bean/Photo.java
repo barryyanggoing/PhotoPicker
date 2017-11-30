@@ -9,7 +9,7 @@ import java.io.Serializable;
 public class Photo implements Serializable {
 
     private int id;
-    private String path;  //路径
+    private String path;
     private boolean isCamera;
 
     public Photo(String path) {

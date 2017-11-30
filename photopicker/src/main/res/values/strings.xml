@@ -1,9 +1,11 @@
 <resources>
     <string name="app_name">PhotoPicker</string>
 
-    <string name="photos_num">%1$d张</string>
+    <string name="app_photo_num">%1$d张</string>
     <string name="msg_no_camera">没找到摄像头</string>
     <string name="msg_maxi_capacity">已达到照片选择上限</string>
     <string name="commit">确定</string>
     <string name="commit_num">确定(%1$d/%2$d)</string>
+    <string name="app_check_sdcard">你的手机没有sd card</string>
+    <string name="app_no_permission">没有访问权限,请到设置->应用->权限打开</string>
 </resources>

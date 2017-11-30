@@ -3,6 +3,7 @@
     android:id="@+id/wrap_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <com.barryyang.photopicker.widget.SquareImageView
         android:id="@+id/imageview_photo"
         android:layout_width="match_parent"
@@ -19,9 +20,7 @@
     <ImageView
         android:id="@+id/checkmark"
         android:layout_gravity="top|right"
-        android:layout_marginTop="5.5dp"
-        android:layout_marginRight="5.5dp"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:src="@drawable/btn_select_selector"/>
 </FrameLayout>

@@ -17,34 +17,29 @@ import java.util.Map;
 
 public class PhotoUtils {
 
+    /**
+     * 获取对应文件夹下的照片
+     * @param context
+     * @return
+     */
     public static Map<String, PhotoFolder> getPhotos(Context context) {
         Map<String, PhotoFolder> folderMap = new HashMap<>();
-
         String allPhotosKey = "所有图片";
         PhotoFolder allFolder = new PhotoFolder();
         allFolder.setName(allPhotosKey);
         allFolder.setDirPath(allPhotosKey);
         allFolder.setPhotoList(new ArrayList<Photo>());
         folderMap.put(allPhotosKey, allFolder);
-
         Uri imageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         ContentResolver mContentResolver = context.getContentResolver();
-
-        // 只查询jpeg和png的图片
         Cursor mCursor = mContentResolver.query(imageUri, null,
                 MediaStore.Images.Media.MIME_TYPE + " in(?, ?)",
                 new String[]{"image/jpeg", "image/png"},
                 MediaStore.Images.Media.DATE_MODIFIED + " desc");
-
-        int pathIndex = mCursor
-                .getColumnIndex(MediaStore.Images.Media.DATA);
-
+        int pathIndex = mCursor.getColumnIndex(MediaStore.Images.Media.DATA);
         if (mCursor.moveToFirst()) {
             do {
-                // 获取图片的路径
                 String path = mCursor.getString(pathIndex);
-
-                // 获取该图片的父路径名
                 File parentFile = new File(path).getParentFile();
                 if (parentFile == null) {
                     continue;
@@ -58,7 +53,6 @@ public class PhotoUtils {
                     folderMap.get(allPhotosKey).getPhotoList().add(photo);
                     continue;
                 } else {
-                    // 初始化imageFolder
                     PhotoFolder photoFolder = new PhotoFolder();
                     List<Photo> photoList = new ArrayList<>();
                     Photo photo = new Photo(path);
