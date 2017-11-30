@@ -5,9 +5,9 @@
     android:orientation="vertical">
 
     <com.barryyang.photopicker.widget.SquareImageView
-        android:id="@+id/imageView"
+        android:id="@+id/iv_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:scaleType="centerCrop"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:scaleType="centerCrop" />
 </LinearLayout>

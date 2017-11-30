@@ -4,13 +4,15 @@ import android.content.Context;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 
-import com.barryyang.photopicker.utils.OtherUtils;
+import com.barryyang.photopicker.utils.DensityUtil;
+import com.barryyang.photopicker.utils.ScreenUtil;
 
 
 public class SquareImageView extends AppCompatImageView {
 
-    Context mContext;
-    int mWidth;
+    private Context mContext;
+    private int mWidth;
+
     public SquareImageView(Context context) {
         this(context, null);
     }
@@ -22,8 +24,8 @@ public class SquareImageView extends AppCompatImageView {
     public SquareImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.mContext = context;
-        int screenWidth = OtherUtils.getWidthInPx(mContext);
-        mWidth = (screenWidth - OtherUtils.dip2px(mContext, 4))/3;
+        int screenWidth = ScreenUtil.getScreenWH(mContext)[0];
+        mWidth = (screenWidth - DensityUtil.dip2px(mContext, 4)) / 3;
     }
 
     @Override

@@ -1,9 +1,9 @@
-package com.barryyang.photopicker.utils;
+package com.barryyang.photopicker;
 
 import android.content.Context;
 import android.content.Intent;
 
-import com.barryyang.photopicker.PhotoPickerActivity;
+import com.barryyang.photopicker.utils.ConstantUtil;
 
 /**
  * @author：barryyang on 2017/11/30 10:10
@@ -52,4 +52,5 @@ public class PhotoPickerSDK {
         intent.putExtra(ConstantUtil.SELECT_MAX, mMaxSelect);
         mContext.startActivity(intent);
     }
+
 }

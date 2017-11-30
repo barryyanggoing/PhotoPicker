@@ -9,10 +9,10 @@ import android.widget.GridView;
 import com.barryyang.photopicker.receiver.PhotoBroadcastReceiver;
 import com.barryyang.photopicker.utils.ConstantUtil;
 import com.barryyang.photopicker.utils.LogUtils;
-import com.barryyang.photopicker.utils.PhotoPickerSDK;
 
 import java.util.ArrayList;
 
+import com.barryyang.photopicker.adapter.PhotoSelectAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void photoSelectSuccess(ArrayList<String> pathList) {
             LogUtils.d(TAG, pathList.toString());
-            PhotoSelectAdapter mPhotoSelectAdapter = new PhotoSelectAdapter(MainActivity.this,pathList);
+            PhotoSelectAdapter mPhotoSelectAdapter = new PhotoSelectAdapter(MainActivity.this, pathList);
             mGrideView.setAdapter(mPhotoSelectAdapter);
         }
     }

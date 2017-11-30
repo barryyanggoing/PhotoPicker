@@ -1,4 +1,4 @@
-package com.barryyang.photopicker;
+package com.barryyang.photopicker.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.barryyang.photopicker.R;
 import com.barryyang.photopicker.widget.SquareImageView;
 import com.bumptech.glide.Glide;
 
@@ -16,7 +17,7 @@ import java.util.ArrayList;
  * @description:
  * @version:
  */
-class PhotoSelectAdapter extends BaseAdapter {
+public class PhotoSelectAdapter extends BaseAdapter {
 
     private Context mContext;
     private ArrayList<String> mPathList;
@@ -47,17 +48,17 @@ class PhotoSelectAdapter extends BaseAdapter {
         ViewHolder viewHolder;
         if (convertView == null) {
             viewHolder = new ViewHolder();
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_image, null);
-            viewHolder.imageView = convertView.findViewById(R.id.imageView);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.layout_main_item, null);
+            viewHolder.mImage = convertView.findViewById(R.id.iv_image);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        Glide.with(mContext).load(path).into(viewHolder.imageView);
+        Glide.with(mContext).load(path).into(viewHolder.mImage);
         return convertView;
     }
 
     class ViewHolder {
-        private SquareImageView imageView;
+        private SquareImageView mImage;
     }
 }

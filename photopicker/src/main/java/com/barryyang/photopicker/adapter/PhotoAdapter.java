@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -14,7 +13,8 @@ import com.barryyang.photopicker.R;
 import com.barryyang.photopicker.bean.Photo;
 import com.barryyang.photopicker.listener.OnSelectPhotoListener;
 import com.barryyang.photopicker.utils.ConstantUtil;
-import com.barryyang.photopicker.utils.OtherUtils;
+import com.barryyang.photopicker.utils.SdCardUtils;
+import com.barryyang.photopicker.utils.StringUtil;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
@@ -27,28 +27,32 @@ import java.util.List;
 public class PhotoAdapter extends BaseAdapter {
 
     private Context mContext;
-    private List<Photo> mDatas;
+    private List<Photo> mPhotoList;
 
     private boolean mShowCamera;
     private int mMaxNum;
     private boolean mSelectMode;
-    private int mWidth;
 
     private OnSelectPhotoListener mOnSelectPhotoListener;
 
-    public PhotoAdapter(Context context, List<Photo> mDatas) {
-        this.mDatas = mDatas;
+    private ArrayList<String> pathList = new ArrayList<>();
+
+    public PhotoAdapter(Context context, List<Photo> photoList) {
+        this.mPhotoList = photoList;
         this.mContext = context;
-        int screenWidth = OtherUtils.getWidthInPx(mContext);
-        mWidth = (screenWidth - OtherUtils.dip2px(mContext, 4)) / 3;
     }
 
+    /**
+     * 显示相机
+     *
+     * @param showCamera
+     */
     public void setShowCamera(boolean showCamera) {
         this.mShowCamera = showCamera;
         if (mShowCamera) {
             Photo camera = new Photo(null);
             camera.setIsCamera(true);
-            mDatas.add(0, camera);
+            mPhotoList.add(0, camera);
         }
     }
 
@@ -56,10 +60,20 @@ public class PhotoAdapter extends BaseAdapter {
         this.mOnSelectPhotoListener = onSelectPhotoListener;
     }
 
+    /**
+     * 设置最大的图片
+     *
+     * @param maxNum
+     */
     public void setMaxNum(int maxNum) {
         this.mMaxNum = maxNum;
     }
 
+    /**
+     * 单选还是多选
+     *
+     * @param selectMode
+     */
     public void setSelectMode(boolean selectMode) {
         this.mSelectMode = selectMode;
     }
@@ -81,55 +95,72 @@ public class PhotoAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return mDatas.size();
+        return mPhotoList.size();
     }
 
     @Override
     public Photo getItem(int position) {
-        if (mDatas == null || mDatas.size() == 0) {
+        if (mPhotoList == null || mPhotoList.size() == 0) {
             return null;
         }
-        return mDatas.get(position);
+        return mPhotoList.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return mDatas.get(position).getId();
+        return mPhotoList.get(position).getId();
     }
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         if (getItemViewType(position) == ConstantUtil.TYPE_CAMERA) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_camera_layout, null);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.layout_zero_camera, null);
             convertView.setTag(null);
-            GridView.LayoutParams lp = new GridView.LayoutParams(mWidth, mWidth);
-            convertView.setLayoutParams(lp);
         } else {
-            ViewHolder holder;
+            final ViewHolder viewHolder;
             if (convertView == null) {
-                holder = new ViewHolder();
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.item_photo_layout, null);
-                holder.photoImageView = convertView.findViewById(R.id.imageview_photo);
-                holder.selectView = convertView.findViewById(R.id.checkmark);
-                holder.maskView = convertView.findViewById(R.id.mask);
-                holder.wrapLayout = convertView.findViewById(R.id.wrap_layout);
-                convertView.setTag(holder);
+                viewHolder = new ViewHolder();
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.layout_photo_item, null);
+                viewHolder.mImage = convertView.findViewById(R.id.iv_image);
+                viewHolder.mSelected = convertView.findViewById(R.id.iv_selected);
+                viewHolder.mViewBg = convertView.findViewById(R.id.view_bg);
+                viewHolder.mFlLayout = convertView.findViewById(R.id.fl_layout);
+                convertView.setTag(viewHolder);
             } else {
-                holder = (ViewHolder) convertView.getTag();
+                viewHolder = (ViewHolder) convertView.getTag();
             }
-            holder.photoImageView.setImageResource(R.drawable.ic_photo_loading);
-            Photo photo = getItem(position);
+            viewHolder.mImage.setImageResource(R.drawable.ic_photo_loading);
+            final Photo photo = getItem(position);
             if (mSelectMode) {
-                holder.selectView.setVisibility(View.VISIBLE);
+                viewHolder.mSelected.setVisibility(View.VISIBLE);
             } else {
-                holder.selectView.setVisibility(View.GONE);
+                viewHolder.mSelected.setVisibility(View.GONE);
             }
-            Glide.with(mContext).load(photo.getPath()).into(holder.photoImageView);
-            holder.wrapLayout.setOnClickListener(new View.OnClickListener() {
+            Glide.with(mContext).load(photo.getPath()).into(viewHolder.mImage);
+            viewHolder.mFlLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (mSelectMode) {
+                        String selectPath = photo.getPath();
+                        if (pathList.contains(selectPath)) {
+                            pathList.remove(selectPath);
+                            viewHolder.mSelected.setSelected(false);
+                            viewHolder.mViewBg.setVisibility(View.GONE);
+                        } else {
+                            if (pathList.size() >= mMaxNum) {
+                                String notice = StringUtil.formatResourceString(mContext, R.string.app_photo_maxnum, mMaxNum);
+                                Toast.makeText(mContext, notice, Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            pathList.add(selectPath);
+                            viewHolder.mSelected.setSelected(true);
+                            viewHolder.mViewBg.setVisibility(View.VISIBLE);
+                        }
+                    } else {
+                        pathList.add(photo.getPath());
+                    }
                     if (mOnSelectPhotoListener != null) {
-                        mOnSelectPhotoListener.onPhotoSelect(position);
+                        mOnSelectPhotoListener.onPhotoSelect(pathList);
                     }
                 }
             });
@@ -138,10 +169,10 @@ public class PhotoAdapter extends BaseAdapter {
     }
 
     public class ViewHolder {
-        private ImageView photoImageView;
-        private ImageView selectView;
-        private View maskView;
-        private FrameLayout wrapLayout;
+        private ImageView mImage;
+        private ImageView mSelected;
+        private View mViewBg;
+        private FrameLayout mFlLayout;
     }
 
 }

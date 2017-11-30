@@ -1,10 +1,12 @@
 package com.barryyang.photopicker.listener;
 
+import java.util.ArrayList;
+
 /**
- * @author：Administrator on 2017/11/30 13:29
+ * @author：barryyang on 2017/11/30 13:29
  * @description:
  * @version:
  */
 public interface OnSelectPhotoListener {
-    void onPhotoSelect(int position);
+    void onPhotoSelect(ArrayList<String> selectList);
 }

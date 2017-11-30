@@ -5,13 +5,9 @@ import java.util.List;
 
 public class PhotoFolder implements Serializable {
 
-    /* 文件夹名 */
     private String name;
-    /* 文件夹路径 */
     private String dirPath;
-    /* 该文件夹下图片列表 */
     private List<Photo> photoList;
-    /* 标识是否选中该文件夹 */
     private boolean isSelected;
 
     public boolean isSelected() {

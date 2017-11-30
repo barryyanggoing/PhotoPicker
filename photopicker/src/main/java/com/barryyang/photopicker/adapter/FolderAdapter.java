@@ -10,7 +10,8 @@ import android.widget.TextView;
 
 import com.barryyang.photopicker.R;
 import com.barryyang.photopicker.bean.PhotoFolder;
-import com.barryyang.photopicker.utils.OtherUtils;
+import com.barryyang.photopicker.utils.SdCardUtils;
+import com.barryyang.photopicker.utils.StringUtil;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
@@ -21,30 +22,28 @@ import java.util.List;
 
 public class FolderAdapter extends BaseAdapter {
 
-    private List<PhotoFolder> mDatas;
+    private List<PhotoFolder> mPhotoFolder;
     private Context mContext;
-    private int mWidth;
 
-    public FolderAdapter(Context context, List<PhotoFolder> mDatas) {
-        this.mDatas = mDatas;
+    public FolderAdapter(Context context, List<PhotoFolder> photoFolder) {
+        this.mPhotoFolder = photoFolder;
         this.mContext = context;
-        mWidth = OtherUtils.dip2px(context, 90);
     }
 
     @Override
     public int getCount() {
-        if (mDatas == null) {
+        if (mPhotoFolder == null) {
             return 0;
         }
-        return mDatas.size();
+        return mPhotoFolder.size();
     }
 
     @Override
     public PhotoFolder getItem(int position) {
-        if (mDatas == null || mDatas.size() == 0) {
+        if (mPhotoFolder == null || mPhotoFolder.size() == 0) {
             return null;
         }
-        return mDatas.get(position);
+        return mPhotoFolder.get(position);
     }
 
     @Override
@@ -55,18 +54,17 @@ public class FolderAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
+        ViewHolder viewHolder;
         if (convertView == null) {
-            holder = new ViewHolder();
-            convertView = LayoutInflater.from(mContext).inflate(
-                    R.layout.item_folder_layout, null);
-            holder.photoIV = convertView.findViewById(R.id.imageview_folder_img);
-            holder.folderNameTV = convertView.findViewById(R.id.textview_folder_name);
-            holder.photoNumTV = convertView.findViewById(R.id.textview_photo_num);
-            holder.selectIV = convertView.findViewById(R.id.imageview_folder_select);
-            convertView.setTag(holder);
+            viewHolder = new ViewHolder();
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.layout_folder_item, null);
+            viewHolder.mIvImage = convertView.findViewById(R.id.iv_image);
+            viewHolder.mFolderName = convertView.findViewById(R.id.tv_folder_name);
+            viewHolder.mPhotoTotal = convertView.findViewById(R.id.tv_photo_total);
+            viewHolder.mSelected = convertView.findViewById(R.id.iv_select);
+            convertView.setTag(viewHolder);
         } else {
-            holder = (ViewHolder) convertView.getTag();
+            viewHolder = (ViewHolder) convertView.getTag();
         }
         PhotoFolder folder = getItem(position);
         if (folder == null) {
@@ -75,21 +73,21 @@ public class FolderAdapter extends BaseAdapter {
         if (folder.getPhotoList() == null || folder.getPhotoList().size() == 0) {
             return convertView;
         }
-        holder.selectIV.setVisibility(View.GONE);
-        holder.photoIV.setImageResource(R.drawable.ic_photo_loading);
+        viewHolder.mSelected.setVisibility(View.GONE);
+        viewHolder.mIvImage.setImageResource(R.drawable.ic_photo_loading);
         if (folder.isSelected()) {
-            holder.selectIV.setVisibility(View.VISIBLE);
+            viewHolder.mSelected.setVisibility(View.VISIBLE);
         }
-        holder.folderNameTV.setText(folder.getName());
-        holder.photoNumTV.setText(folder.getPhotoList().size() + "张");
-        Glide.with(mContext).load(folder.getPhotoList().get(0).getPath()).into(holder.photoIV);
+        viewHolder.mFolderName.setText(folder.getName());
+        viewHolder.mPhotoTotal.setText(StringUtil.formatResourceString(mContext, R.string.app_photo_num, folder.getPhotoList().size()));
+        Glide.with(mContext).load(folder.getPhotoList().get(0).getPath()).into(viewHolder.mIvImage);
         return convertView;
     }
 
     private class ViewHolder {
-        private ImageView photoIV;
-        private TextView folderNameTV;
-        private TextView photoNumTV;
-        private ImageView selectIV;
+        private ImageView mIvImage;
+        private TextView mFolderName;
+        private TextView mPhotoTotal;
+        private ImageView mSelected;
     }
 }
