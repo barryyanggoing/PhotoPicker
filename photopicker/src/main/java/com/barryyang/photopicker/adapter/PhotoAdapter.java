@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.barryyang.photopicker.R;
 import com.barryyang.photopicker.bean.Photo;
+import com.barryyang.photopicker.listener.OnSelectPhotoListener;
 import com.barryyang.photopicker.utils.ConstantUtil;
 import com.barryyang.photopicker.utils.OtherUtils;
 import com.bumptech.glide.Glide;
@@ -31,22 +32,15 @@ public class PhotoAdapter extends BaseAdapter {
     private boolean mShowCamera;
     private int mMaxNum;
     private boolean mSelectMode;
-
     private int mWidth;
+
+    private OnSelectPhotoListener mOnSelectPhotoListener;
 
     public PhotoAdapter(Context context, List<Photo> mDatas) {
         this.mDatas = mDatas;
         this.mContext = context;
         int screenWidth = OtherUtils.getWidthInPx(mContext);
         mWidth = (screenWidth - OtherUtils.dip2px(mContext, 4)) / 3;
-    }
-
-    public void setDatas(List<Photo> mDatas) {
-        this.mDatas = mDatas;
-    }
-
-    public boolean showCamera() {
-        return mShowCamera;
     }
 
     public void setShowCamera(boolean showCamera) {
@@ -58,15 +52,16 @@ public class PhotoAdapter extends BaseAdapter {
         }
     }
 
+    public void setOnSelectPhotoListener(OnSelectPhotoListener onSelectPhotoListener) {
+        this.mOnSelectPhotoListener = onSelectPhotoListener;
+    }
+
     public void setMaxNum(int maxNum) {
         this.mMaxNum = maxNum;
     }
 
     public void setSelectMode(boolean selectMode) {
         this.mSelectMode = selectMode;
-        if (mSelectMode) {
-
-        }
     }
 
     @Override
@@ -103,7 +98,7 @@ public class PhotoAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         if (getItemViewType(position) == ConstantUtil.TYPE_CAMERA) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_camera_layout, null);
             convertView.setTag(null);
@@ -124,14 +119,20 @@ public class PhotoAdapter extends BaseAdapter {
             }
             holder.photoImageView.setImageResource(R.drawable.ic_photo_loading);
             Photo photo = getItem(position);
-            //如果是多选，则显示左上角的多选框
-//            if (mSelectMode) {
-//                holder.photoImageView.setTag(photo.getPath());
-//                holder.selectView.setVisibility(View.VISIBLE);
-//            } else {
-//                holder.selectView.setVisibility(View.GONE);
-//            }
+            if (mSelectMode) {
+                holder.selectView.setVisibility(View.VISIBLE);
+            } else {
+                holder.selectView.setVisibility(View.GONE);
+            }
             Glide.with(mContext).load(photo.getPath()).into(holder.photoImageView);
+            holder.wrapLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnSelectPhotoListener != null) {
+                        mOnSelectPhotoListener.onPhotoSelect(position);
+                    }
+                }
+            });
         }
         return convertView;
     }
@@ -142,4 +143,5 @@ public class PhotoAdapter extends BaseAdapter {
         private View maskView;
         private FrameLayout wrapLayout;
     }
+
 }

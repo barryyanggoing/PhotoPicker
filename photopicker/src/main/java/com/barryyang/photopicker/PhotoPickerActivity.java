@@ -2,6 +2,7 @@ package com.barryyang.photopicker;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import com.barryyang.photopicker.adapter.PhotoAdapter;
 import com.barryyang.photopicker.bean.Photo;
 import com.barryyang.photopicker.bean.PhotoFolder;
+import com.barryyang.photopicker.listener.OnSelectPhotoListener;
 import com.barryyang.photopicker.utils.ConstantUtil;
 import com.barryyang.photopicker.utils.LogUtils;
 import com.barryyang.photopicker.utils.OtherUtils;
@@ -34,7 +36,7 @@ import java.util.Set;
  * @description:
  * @version:
  */
-public class PhotoPickerActivity extends Activity implements View.OnClickListener {
+public class PhotoPickerActivity extends Activity implements View.OnClickListener, OnSelectPhotoListener {
 
     public final static String TAG = "PhotoPickerActivity";
 
@@ -57,7 +59,12 @@ public class PhotoPickerActivity extends Activity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_picker);
         initView();
+        initOnclick();
         initData();
+    }
+
+    private void initOnclick() {
+        mBack.setOnClickListener(this);
     }
 
     private void initView() {
@@ -134,6 +141,7 @@ public class PhotoPickerActivity extends Activity implements View.OnClickListene
         mPhotoLists.addAll(mFolderMap.get(ConstantUtil.ALL_PHOTO).getPhotoList());
         mPhotoNumTV.setText(OtherUtils.formatResourceString(getApplicationContext(), R.string.app_photo_num, mPhotoLists.size()));
         mPhotoAdapter = new PhotoAdapter(getApplicationContext(), mPhotoLists);
+        mPhotoAdapter.setOnSelectPhotoListener(this);
         mPhotoAdapter.setShowCamera(mShowCamera);
         mPhotoAdapter.setSelectMode(mSelectMode);
         mPhotoAdapter.setMaxNum(mMaxSelect);
@@ -189,6 +197,27 @@ public class PhotoPickerActivity extends Activity implements View.OnClickListene
                 break;
             default:
                 break;
+        }
+    }
+
+    /**
+     * 选中图片时候的回调
+     *
+     * @param position
+     */
+    @Override
+    public void onPhotoSelect(int position) {
+        if (mSelectMode) {
+
+        } else {
+            String path = mPhotoLists.get(position).getPath();
+            Intent intent = new Intent(ConstantUtil.PHOTO_PICKER);
+            ArrayList<String> imageList = new ArrayList<>();
+            imageList.add(path);
+            intent.putStringArrayListExtra("path",imageList);
+            sendBroadcast(intent);
+            LogUtils.d(TAG, "onPhotoSelect：" + path);
+            finish();
         }
     }
 }

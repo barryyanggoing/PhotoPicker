@@ -46,4 +46,9 @@ public class ConstantUtil {
      * PhotoAdapter 不显示相机
      */
     public static final int TYPE_PHOTO = 1;
+
+    /**
+     * 相片被选中
+     */
+    public static final String PHOTO_PICKER = "photo_picker";
 }
