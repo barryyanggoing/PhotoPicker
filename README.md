@@ -1,23 +1,8 @@
-
 showCamera 是否显示相机 true 显示  false 不显示
+
 selectMode 单选还是多选 false 单选 true 多选
+
 maxSelect  大多选择的图片，<0 则为9 >9 则为9
-
-package com.barryyang.photopicker;
-
-import android.content.IntentFilter;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.GridView;
-
-import com.barryyang.photopicker.receiver.PhotoBroadcastReceiver;
-import com.barryyang.photopicker.utils.ConstantUtil;
-import com.barryyang.photopicker.utils.LogUtils;
-
-import java.util.ArrayList;
-
-import com.barryyang.photopicker.adapter.PhotoSelectAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
