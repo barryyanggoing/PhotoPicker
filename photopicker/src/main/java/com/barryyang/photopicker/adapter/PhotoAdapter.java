@@ -133,6 +133,11 @@ public class PhotoAdapter extends BaseAdapter {
             final Photo photo = getItem(position);
             if (mSelectMode) {
                 viewHolder.mSelected.setVisibility(View.VISIBLE);
+                if (photo.isSelected()) {
+                    viewHolder.mSelected.setSelected(true);
+                } else {
+                    viewHolder.mSelected.setSelected(false);
+                }
             } else {
                 viewHolder.mSelected.setVisibility(View.GONE);
             }
@@ -144,7 +149,6 @@ public class PhotoAdapter extends BaseAdapter {
                         String selectPath = photo.getPath();
                         if (pathList.contains(selectPath)) {
                             pathList.remove(selectPath);
-                            viewHolder.mSelected.setSelected(false);
                             viewHolder.mViewBg.setVisibility(View.GONE);
                         } else {
                             if (pathList.size() >= mMaxNum) {
@@ -153,14 +157,13 @@ public class PhotoAdapter extends BaseAdapter {
                                 return;
                             }
                             pathList.add(selectPath);
-                            viewHolder.mSelected.setSelected(true);
                             viewHolder.mViewBg.setVisibility(View.VISIBLE);
                         }
                     } else {
                         pathList.add(photo.getPath());
                     }
                     if (mOnSelectPhotoListener != null) {
-                        mOnSelectPhotoListener.onPhotoSelect(pathList);
+                        mOnSelectPhotoListener.onPhotoSelect(pathList,position);
                     }
                 }
             });

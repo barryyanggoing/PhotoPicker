@@ -11,6 +11,15 @@ public class Photo implements Serializable {
     private int id;
     private String path;
     private boolean isCamera;
+    private boolean isSelected;
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
 
     public Photo(String path) {
         this.path = path;
