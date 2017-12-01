@@ -1,12 +1,12 @@
-apply plugin: 'com.android.application'
+//apply plugin: 'com.android.application'
 
-//apply plugin: 'com.android.library'
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 26
 
     defaultConfig {
-        applicationId "com.barryyang.photopicker"
+       // applicationId "com.barryyang.photopicker"
         minSdkVersion 14
         targetSdkVersion 26
         versionCode 1

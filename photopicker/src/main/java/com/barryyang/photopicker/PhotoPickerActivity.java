@@ -234,19 +234,14 @@ public class PhotoPickerActivity extends Activity implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.iv_back:
-                finish();
-                break;
-            case R.id.btn_commit:
-                photoSelectSuccess(mSelectList);
-                finish();
-                break;
-            case R.id.tv_folder_name:
-                toggleFolderList(mFoldersList);
-                break;
-            default:
-                break;
+        int i = v.getId();
+        if (i == R.id.iv_back) {
+            finish();
+        } else if (i == R.id.btn_commit) {
+            photoSelectSuccess(mSelectList);
+            finish();
+        } else if (i == R.id.tv_folder_name) {
+            toggleFolderList(mFoldersList);
         }
     }
 
