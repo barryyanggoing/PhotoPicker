@@ -131,7 +131,7 @@ public class PhotoPickerActivity extends Activity implements View.OnClickListene
      * 获取本地图片
      */
     private void getPhotos() {
-         myPhotoTask = new MyPhotoTask(this);
+        myPhotoTask = new MyPhotoTask(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, ConstantUtil.REQUEST_PERMISSION);

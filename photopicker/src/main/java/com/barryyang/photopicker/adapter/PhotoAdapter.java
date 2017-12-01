@@ -13,8 +13,8 @@ import com.barryyang.photopicker.R;
 import com.barryyang.photopicker.bean.Photo;
 import com.barryyang.photopicker.listener.OnSelectPhotoListener;
 import com.barryyang.photopicker.utils.ConstantUtil;
-import com.barryyang.photopicker.utils.SdCardUtils;
 import com.barryyang.photopicker.utils.StringUtil;
+import com.barryyang.photopicker.widget.SquareImageView;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
@@ -169,7 +169,7 @@ public class PhotoAdapter extends BaseAdapter {
     }
 
     public class ViewHolder {
-        private ImageView mImage;
+        private SquareImageView mImage;
         private ImageView mSelected;
         private View mViewBg;
         private FrameLayout mFlLayout;
