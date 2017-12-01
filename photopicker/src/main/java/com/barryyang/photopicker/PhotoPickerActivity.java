@@ -45,6 +45,7 @@ import com.barryyang.photopicker.utils.PhotoUtils;
 import com.barryyang.photopicker.utils.StringUtil;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -81,6 +82,8 @@ public class PhotoPickerActivity extends Activity implements View.OnClickListene
     private PhotoAdapter mPhotoAdapter;
 
     private File mFileCamera;
+
+    private MyPhotoTask myPhotoTask;
 
     /**
      * 文件夹列表是否处于显示状态
@@ -128,14 +131,15 @@ public class PhotoPickerActivity extends Activity implements View.OnClickListene
      * 获取本地图片
      */
     private void getPhotos() {
+         myPhotoTask = new MyPhotoTask(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, ConstantUtil.REQUEST_PERMISSION);
             } else {
-                photosTask.execute();
+                myPhotoTask.execute();
             }
         } else {
-            photosTask.execute();
+            myPhotoTask.execute();
         }
     }
 
@@ -151,7 +155,7 @@ public class PhotoPickerActivity extends Activity implements View.OnClickListene
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == ConstantUtil.REQUEST_PERMISSION) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                photosTask.execute();
+                myPhotoTask.execute();
             } else {
                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.app_no_permission), Toast.LENGTH_SHORT).show();
             }
@@ -161,22 +165,29 @@ public class PhotoPickerActivity extends Activity implements View.OnClickListene
     /**
      * 异步获取照片信息
      */
-    private AsyncTask photosTask = new AsyncTask() {
-        @Override
-        protected void onPreExecute() {
+    private class MyPhotoTask extends AsyncTask {
+
+        private WeakReference<PhotoPickerActivity> weakReference;
+
+        public MyPhotoTask(PhotoPickerActivity context) {
+            weakReference = new WeakReference<>(context);
         }
 
         @Override
-        protected Object doInBackground(Object[] params) {
+        protected Object doInBackground(Object[] objects) {
             mFolderMap = PhotoUtils.getPhotos(getApplicationContext());
             return null;
         }
 
         @Override
         protected void onPostExecute(Object o) {
+            PhotoPickerActivity activity = weakReference.get();
+            if (activity == null) {
+                return;
+            }
             getPhotosSuccess();
         }
-    };
+    }
 
     /**
      * 获取照片成功
