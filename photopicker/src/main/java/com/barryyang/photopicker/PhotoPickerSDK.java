@@ -40,6 +40,9 @@ public class PhotoPickerSDK {
         this.mSelectMode = selectMode;
         this.mShowCamera = showCamera;
         this.mMaxSelect = maxSelect;
+        if (mMaxSelect < 0 || mMaxSelect > ConstantUtil.DEFAULT_MAX) {
+            mMaxSelect = ConstantUtil.DEFAULT_MAX;
+        }
     }
 
     /**

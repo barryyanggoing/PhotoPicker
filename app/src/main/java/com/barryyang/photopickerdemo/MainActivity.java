@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
      * @param view
      */
     public void singleNoCamera(View view) {
-        PhotoPickerSDK.getInstance().init(this, false, false, 1);
+        PhotoPickerSDK.getInstance().init(this, false, false, -1);
         PhotoPickerSDK.getInstance().photoPicker();
     }
 

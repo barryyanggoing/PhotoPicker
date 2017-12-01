@@ -343,7 +343,8 @@ public class PhotoPickerActivity extends Activity implements View.OnClickListene
 
     /**
      * 选中图片时候的回调
-     *  @param selectList
+     *
+     * @param selectList
      * @param position
      * @param mIsSelected
      */
@@ -352,7 +353,7 @@ public class PhotoPickerActivity extends Activity implements View.OnClickListene
         if (mSelectMode) {
             this.mSelectList = selectList;
             setBtnVisible(selectList);
-            updateItem(position,mIsSelected);
+            updateItem(position, mIsSelected);
         } else {
             photoSelectSuccess(selectList);
             finish();
@@ -364,7 +365,7 @@ public class PhotoPickerActivity extends Activity implements View.OnClickListene
      *
      * @param position
      */
-    private void updateItem(int position,boolean mIsSelected) {
+    private void updateItem(int position, boolean mIsSelected) {
         mPhotoLists.get(position).setSelected(mIsSelected);
         int firstVisiblePosition = mGridView.getFirstVisiblePosition();
         int lastVisiblePosition = mGridView.getLastVisiblePosition();
@@ -394,6 +395,7 @@ public class PhotoPickerActivity extends Activity implements View.OnClickListene
     private void setBtnVisible(ArrayList<String> selectList) {
         if (selectList.size() > 0) {
             mCommit.setVisibility(View.VISIBLE);
+            mCommit.setText(getResources().getString(R.string.app_commit) + "(" + selectList.size() + "/" + mMaxSelect + ")");
         } else {
             mCommit.setVisibility(View.GONE);
         }
