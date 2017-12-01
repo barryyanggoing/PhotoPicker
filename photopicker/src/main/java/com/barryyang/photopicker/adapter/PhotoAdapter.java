@@ -32,6 +32,7 @@ public class PhotoAdapter extends BaseAdapter {
     private boolean mShowCamera;
     private int mMaxNum;
     private boolean mSelectMode;
+    private boolean mIsSelected;
 
     private OnSelectPhotoListener mOnSelectPhotoListener;
 
@@ -148,6 +149,7 @@ public class PhotoAdapter extends BaseAdapter {
                     if (mSelectMode) {
                         String selectPath = photo.getPath();
                         if (pathList.contains(selectPath)) {
+                            mIsSelected = false;
                             pathList.remove(selectPath);
                             viewHolder.mViewBg.setVisibility(View.GONE);
                         } else {
@@ -156,6 +158,7 @@ public class PhotoAdapter extends BaseAdapter {
                                 Toast.makeText(mContext, notice, Toast.LENGTH_SHORT).show();
                                 return;
                             }
+                            mIsSelected = true;
                             pathList.add(selectPath);
                             viewHolder.mViewBg.setVisibility(View.VISIBLE);
                         }
@@ -163,7 +166,7 @@ public class PhotoAdapter extends BaseAdapter {
                         pathList.add(photo.getPath());
                     }
                     if (mOnSelectPhotoListener != null) {
-                        mOnSelectPhotoListener.onPhotoSelect(pathList,position);
+                        mOnSelectPhotoListener.onPhotoSelect(pathList,position,mIsSelected);
                     }
                 }
             });

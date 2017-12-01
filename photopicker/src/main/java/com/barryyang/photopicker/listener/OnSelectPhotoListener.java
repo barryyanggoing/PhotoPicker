@@ -8,5 +8,5 @@ import java.util.ArrayList;
  * @version:
  */
 public interface OnSelectPhotoListener {
-    void onPhotoSelect(ArrayList<String> selectList, int position);
+    void onPhotoSelect(ArrayList<String> selectList, int position, boolean mIsSelected);
 }
